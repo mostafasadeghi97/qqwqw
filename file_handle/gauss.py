@@ -1,5 +1,8 @@
-
+import matplotlib.pyplot as plt
 import math
+import sys
+import time
+from subprocess import Popen, PIPE
 class GaussSolver():
     def __init__(self, func, a, b, n):
         self.func = func
@@ -53,6 +56,41 @@ def func2(x):
 
 
 
-g = GaussSolver(func, 0, 1, 10)
-g.execute()
-print(g.get_result())
+# g = GaussSolver(func, 0, 1, n)
+# start = time.time()
+# g.execute()
+# end = time.time()
+# python_time = end-start
+# print("Result of python code (n = {}): {}".format(n, g.get_result()))
+# start = time.time()
+# p = Popen(['./q1 {}'.format(n)], shell=True, stdout=PIPE, stdin=PIPE)
+# result = p.stdout.readline().strip()
+# end =  time.time()
+# cpp_time = end - start
+# print(result.decode())
+# print('python time: '+ str(python_time) + '  ,  c++ time: '+ str(cpp_time))
+
+
+python_dict = {}
+cpp_dict = {}
+for i in range(1,24):
+    g = GaussSolver(func, 0, 1, i)
+    start = time.time()
+    g.execute()
+    end = time.time()
+    python_time = end-start
+    python_dict[i] = python_time
+    start = time.time()
+    p = Popen(['./q1 {}'.format(i)], shell=True, stdout=PIPE, stdin=PIPE)
+    result = p.stdout.readline().strip()
+    end =  time.time()
+    cpp_time = end - start
+    cpp_dict[i] = cpp_time
+
+plt.figure(1)
+# plt.subplot(211)
+plt.plot(list(python_dict.keys()), list(python_dict.values()), label='Python')
+
+# plt.subplot(212)
+plt.plot(list(cpp_dict.keys()), list(cpp_dict.values()), label = 'C++')
+plt.show()
